@@ -958,22 +958,62 @@ function closeMenu() {
 })();
 </script>
 <script>
-// 1. CSV 데이터 파싱 함수
+<script>
+// 1. 쉼표와 따옴표를 완벽하게 처리하는 개선된 CSV 파싱 함수
 function parseCSV(text) {
-    const rows = text.split('\n').filter(row => row.trim() !== '');
-    const headers = rows[0].split(',').map(h => h.trim());
-    return rows.slice(1).map(row => {
-        // 쉼표로 데이터를 분리합니다 (데이터 내에 쉼표가 없도록 주의해서 작성해주세요)
-        const values = row.split(',').map(v => v.trim());
+    const result = [];
+    let row = [];
+    let inQuotes = false;
+    let val = '';
+    
+    for (let i = 0; i < text.length; i++) {
+        let char = text[i];
+        let nextChar = text[i + 1];
+
+        // 따옴표 안의 따옴표("") 처리
+        if (char === '"' && inQuotes && nextChar === '"') {
+            val += '"'; 
+            i++;
+        } 
+        // 따옴표 시작/종료
+        else if (char === '"') {
+            inQuotes = !inQuotes; 
+        } 
+        // 쉼표 (따옴표 밖에 있을 때만 다음 칸으로 이동)
+        else if (char === ',' && !inQuotes) {
+            row.push(val.trim());
+            val = '';
+        } 
+        // 줄바꿈 처리
+        else if ((char === '\n' || char === '\r') && !inQuotes) {
+            if (char === '\r' && nextChar === '\n') i++; 
+            row.push(val.trim());
+            if (row.join('').trim() !== '') result.push(row);
+            row = [];
+            val = '';
+        } 
+        // 일반 글자
+        else {
+            val += char;
+        }
+    }
+    // 마지막 남은 데이터 밀어넣기
+    if (val || row.length > 0) {
+        row.push(val.trim());
+        if (row.join('').trim() !== '') result.push(row);
+    }
+
+    const headers = result[0];
+    return result.slice(1).map(row => {
         let obj = {};
-        headers.forEach((h, i) => obj[h] = values[i] || '');
+        headers.forEach((h, i) => obj[h] = row[i] || '');
         return obj;
     });
 }
 
 // 2. 구글 시트에서 데이터를 불러와서 화면에 그리는 함수
 async function fetchAndRenderData() {
-    // [중요] Step 2에서 복사한 CSV 링크를 아래 따옴표 안에 붙여넣으세요.
+    // [중요] 구글 시트 CSV 링크를 아래 따옴표 안에 꼭 다시 넣어주세요!
     const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTgK4Yf7lqIsMNakLux2KAMmMMVcRqcoe6pcPtOHTivXbkzuHuCJfy8Pj-ZXkezXIjusoW5_3CT_myV/pub?output=csv'; 
 
     try {
@@ -981,19 +1021,17 @@ async function fetchAndRenderData() {
         const dataText = await response.text();
         const items = parseCSV(dataText);
 
-        // 업데이트할 컨테이너 선택 (예: 인기 콘텐츠 섹션인 .vgrid)
         const vgrid = document.querySelector('.vgrid');
         if (!vgrid) return;
         
-        // 기존에 하드코딩 되어있던 예시 카드들을 싹 지웁니다.
         vgrid.innerHTML = ''; 
 
-        // 3. 시트 데이터를 기반으로 카드 생성
         items.forEach(item => {
+            // 썸네일 이미지가 찌그러지지 않고 꽉 차도록 style 추가
             const card = `
                 <a href="${item.link}" class="vcard" target="_blank" rel="noopener noreferrer">
                     <div class="thumb">
-                        <img src="${item.thumbnail}" alt="${item.title}">
+                        <img src="${item.thumbnail}" alt="${item.title}" style="width:100%; height:100%; object-fit:cover;">
                         <div class="thumb-overlay"></div>
                         <span class="ch-badge badge-vmug">${item.badge}</span>
                         <span class="view-count">${item.views}</span>
@@ -1005,7 +1043,6 @@ async function fetchAndRenderData() {
                     </div>
                 </a>
             `;
-            // 완성된 카드를 화면에 추가합니다.
             vgrid.insertAdjacentHTML('beforeend', card);
         });
 
@@ -1014,8 +1051,8 @@ async function fetchAndRenderData() {
     }
 }
 
-// 웹페이지 로딩이 완료되면 함수를 실행합니다.
 window.addEventListener('DOMContentLoaded', fetchAndRenderData);
+</script> 
 </script>    
 </body>
 </html>
