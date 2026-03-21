@@ -957,5 +957,65 @@ function closeMenu() {
     resize(); spawn(); tick();
 })();
 </script>
+<script>
+// 1. CSV 데이터 파싱 함수
+function parseCSV(text) {
+    const rows = text.split('\n').filter(row => row.trim() !== '');
+    const headers = rows[0].split(',').map(h => h.trim());
+    return rows.slice(1).map(row => {
+        // 쉼표로 데이터를 분리합니다 (데이터 내에 쉼표가 없도록 주의해서 작성해주세요)
+        const values = row.split(',').map(v => v.trim());
+        let obj = {};
+        headers.forEach((h, i) => obj[h] = values[i] || '');
+        return obj;
+    });
+}
+
+// 2. 구글 시트에서 데이터를 불러와서 화면에 그리는 함수
+async function fetchAndRenderData() {
+    // [중요] Step 2에서 복사한 CSV 링크를 아래 따옴표 안에 붙여넣으세요.
+    const csvUrl = '여기에_복사한_CSV_링크를_넣어주세요'; 
+
+    try {
+        const response = await fetch(csvUrl);
+        const dataText = await response.text();
+        const items = parseCSV(dataText);
+
+        // 업데이트할 컨테이너 선택 (예: 인기 콘텐츠 섹션인 .vgrid)
+        const vgrid = document.querySelector('.vgrid');
+        if (!vgrid) return;
+        
+        // 기존에 하드코딩 되어있던 예시 카드들을 싹 지웁니다.
+        vgrid.innerHTML = ''; 
+
+        // 3. 시트 데이터를 기반으로 카드 생성
+        items.forEach(item => {
+            const card = `
+                <a href="${item.link}" class="vcard" target="_blank" rel="noopener noreferrer">
+                    <div class="thumb">
+                        <img src="${item.thumbnail}" alt="${item.title}">
+                        <div class="thumb-overlay"></div>
+                        <span class="ch-badge badge-vmug">${item.badge}</span>
+                        <span class="view-count">${item.views}</span>
+                        <div class="play-icon"></div>
+                    </div>
+                    <div class="vcard-body">
+                        <div class="vcard-ch c-vmug">${item.channel}</div>
+                        <div class="vcard-title">${item.title}</div>
+                    </div>
+                </a>
+            `;
+            // 완성된 카드를 화면에 추가합니다.
+            vgrid.insertAdjacentHTML('beforeend', card);
+        });
+
+    } catch (error) {
+        console.error('스프레드시트 데이터 연동 중 오류 발생:', error);
+    }
+}
+
+// 웹페이지 로딩이 완료되면 함수를 실행합니다.
+window.addEventListener('DOMContentLoaded', fetchAndRenderData);
+</script>    
 </body>
 </html>
