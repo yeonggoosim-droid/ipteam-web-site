@@ -360,15 +360,15 @@
     </div>
     <div class="hero-stats">
         <div class="stat-box">
-            <div class="stat-num">185만</div>
+            <div class="stat-num" id="stat-vmug">185만</div>
             <div class="stat-lbl">비디오머그 구독자</div>
         </div>
         <div class="stat-box">
-            <div class="stat-num">39.1만</div>
+            <div class="stat-num" id="stat-gyo">39.1만</div>
             <div class="stat-lbl">교양이를부탁해 구독자</div>
         </div>
         <div class="stat-box">
-            <div class="stat-num">8.67만</div>
+            <div class="stat-num" id="stat-econ">8.67만</div>
             <div class="stat-lbl">경제탈곡기 구독자</div>
         </div>
     </div>
@@ -572,7 +572,7 @@
             </div>
             <div class="ch-body">
                 <div class="ch-name c-vmug">비디오머그 · VIDEOMUG</div>
-                <div class="ch-subs">구독자 185만명 · 동영상 1.2만개</div>
+                <div class="ch-subs" id="subs-vmug">구독자 185만명 · 동영상 1.2만개</div>
                 <div class="ch-desc">대한민국 No.1 보도채널 SBS 기자들의 취재력과 감각 있는 제작진의 프로듀싱, 디지털 전문인력이 함께 제작하는 프리미엄 디지털 콘텐츠 채널. 사회·정치·국제 이슈를 깊이 있는 영상으로 풀어내며 IP 기반의 다양한 비즈니스를 전개하고 있습니다.</div>
                 <div class="ch-pills"><span class="pill">▶ 유튜브</span><span class="pill">📱 숏폼 · 롱폼</span><span class="pill">🗞 영상 저널리즘</span></div>
                 <span class="ch-goto">채널 바로가기 →</span>
@@ -589,7 +589,7 @@
             </div>
             <div class="ch-body">
                 <div class="ch-name c-gyo">교양이를부탁해</div>
-                <div class="ch-subs">구독자 39.1만명 · 동영상 1.3천개</div>
+                <div class="ch-subs" id="subs-gyo">구독자 39.1만명 · 동영상 1.3천개</div>
                 <div class="ch-desc">'지식뉴스'라는 새로운 저널리즘형 디지털 콘텐츠 장르를 개척한 채널. 타운홀 미팅 형식을 차용해 전문가의 견해와 설명을 청취하고 청중의 궁금증을 풀어나가는 방식으로 뉴스에 지적인 효용감을 담습니다.</div>
                 <div class="ch-pills"><span class="pill">▶ 유튜브</span><span class="pill">🎓 지식뉴스</span><span class="pill">🔬 전문가 심층토크</span></div>
                 <span class="ch-goto">채널 바로가기 →</span>
@@ -606,7 +606,7 @@
             </div>
             <div class="ch-body">
                 <div class="ch-name c-econ">경제탈곡기</div>
-                <div class="ch-subs">구독자 8.67만명 · 동영상 4.1천개</div>
+                <div class="ch-subs" id="subs-econ">구독자 8.67만명 · 동영상 4.1천개</div>
                 <div class="ch-desc">복잡한 경제를 탈탈 털어 핵심만 짚는 SBS 경제콘텐츠 전문채널. 금리·환율·주식·부동산부터 글로벌 경제 흐름까지 SBS 전문 기자들이 명쾌하게 해설합니다.</div>
                 <div class="ch-pills"><span class="pill">▶ 유튜브</span><span class="pill">💹 경제 · 금융</span><span class="pill">📈 투자 · 시장</span></div>
                 <span class="ch-goto">채널 바로가기 →</span>
@@ -866,6 +866,133 @@
 </footer>
 
 <script>
+// ================================================================
+// ★ 구글 시트 연동 설정 — 여기 URL 값만 바꾸면 됩니다
+// ================================================================
+// 사용 방법:
+//   1. 구글 시트 열기 → 파일 → 웹에 게시
+//   2. 각 시트(탭)를 CSV 형식으로 게시
+//   3. 생성된 링크를 아래에 붙여넣기
+//
+// URL이 비어 있으면 기존 하드코딩 내용이 그대로 표시됩니다.
+// ================================================================
+const GS = {
+    // ① 인기 콘텐츠 시트 URL  (시트명: 인기콘텐츠)
+    //    컬럼: video_id | title | channel | ip | view_count | category
+    //    category 값: vmug / gyo / econ
+    videos: '',
+
+    // ② 협업 레퍼런스 시트 URL  (시트명: 협업레퍼런스)
+    //    컬럼: video_id | partner | channel_badge | type | description | view_count
+    //    type 값: gov(지자체) / corp(기업PR) / visit(장소방문)
+    refs: '',
+
+    // ③ 채널 통계 시트 URL  (시트명: 채널통계)
+    //    컬럼: id | stat_value | subs_text
+    //    id 값: vmug / gyo / econ
+    //    예시 행: vmug | 185만 | 구독자 185만명 · 동영상 1.2만개
+    stats: '',
+};
+// ================================================================
+
+// ── CSV 파싱 (따옴표·쉼표·줄바꿈 모두 처리) ──
+function csvParse(text) {
+    const rows = [];
+    let row = [], cell = '', inQ = false;
+    for (let i = 0; i < text.length; i++) {
+        const c = text[i], n = text[i + 1];
+        if      (c === '"' && inQ && n === '"') { cell += '"'; i++; }
+        else if (c === '"') { inQ = !inQ; }
+        else if (c === ',' && !inQ) { row.push(cell.trim()); cell = ''; }
+        else if ((c === '\n' || c === '\r') && !inQ) {
+            if (c === '\r' && n === '\n') i++;
+            row.push(cell.trim());
+            if (row.some(v => v)) rows.push(row);
+            row = []; cell = '';
+        } else { cell += c; }
+    }
+    if (cell || row.length) { row.push(cell.trim()); if (row.some(v => v)) rows.push(row); }
+    const headers = rows[0] || [];
+    return rows.slice(1).map(r => Object.fromEntries(headers.map((h, i) => [h, r[i] || ''])));
+}
+
+// ── 구글 시트 데이터 가져오기 ──
+async function gsGet(url) {
+    if (!url || url.trim() === '') return null;
+    try {
+        const res = await fetch(url);
+        if (!res.ok) return null;
+        return csvParse(await res.text());
+    } catch { return null; }
+}
+
+// ── ① 인기 콘텐츠 렌더링 ──
+async function loadVideos() {
+    const data = await gsGet(GS.videos);
+    if (!data || !data.length) return;
+    const grid = document.querySelector('.vgrid');
+    if (!grid) return;
+
+    const badgeClass = { vmug: 'badge-vmug', gyo: 'badge-gyo', econ: 'badge-econ' };
+    const colorClass  = { vmug: 'c-vmug',     gyo: 'c-gyo',     econ: 'c-econ'     };
+
+    grid.innerHTML = data.map(v => `
+        <a href="https://www.youtube.com/watch?v=${v.video_id}" target="_blank" class="vcard" data-ch="${v.category}">
+            <div class="thumb">
+                <img src="https://img.youtube.com/vi/${v.video_id}/hqdefault.jpg" alt="${v.title}" loading="lazy">
+                <div class="thumb-overlay"></div>
+                <span class="ch-badge ${badgeClass[v.category] || 'badge-vmug'}">${v.channel}</span>
+                <div class="play-icon"></div>
+                <span class="view-count">${v.view_count}</span>
+            </div>
+            <div class="vcard-body">
+                <div class="vcard-ch ${colorClass[v.category] || 'c-vmug'}">${v.channel}${v.ip ? ' · ' + v.ip : ''}</div>
+                <div class="vcard-title">${v.title}</div>
+            </div>
+        </a>`).join('');
+}
+
+// ── ② 협업 레퍼런스 렌더링 ──
+async function loadRefs() {
+    const data = await gsGet(GS.refs);
+    if (!data || !data.length) return;
+    const grid = document.querySelector('.ref-grid');
+    if (!grid) return;
+
+    grid.innerHTML = data.map(r => `
+        <a href="https://www.youtube.com/watch?v=${r.video_id}" target="_blank"
+           class="ref-card" data-rf="${r.type}" style="text-decoration:none;color:inherit;">
+            <div style="position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;background:#0d0d1a;">
+                <img src="https://img.youtube.com/vi/${r.video_id}/hqdefault.jpg"
+                     alt="${r.partner}" style="width:100%;height:100%;object-fit:cover;">
+                <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.72) 0%,transparent 55%);"></div>
+                <span style="position:absolute;top:10px;left:10px;font-size:10px;font-weight:800;
+                             padding:3px 10px;border-radius:10px;
+                             background:rgba(59,130,246,.25);color:#93c5fd;
+                             border:1px solid rgba(59,130,246,.3);">${r.channel_badge}</span>
+            </div>
+            <div class="ref-body">
+                <div class="ref-partner">${r.partner}</div>
+                <span class="ref-type">기획형 브랜디드 상품</span>
+                <div class="ref-desc">${r.description}</div>
+                <div class="ref-views">${r.view_count}</div>
+            </div>
+        </a>`).join('');
+}
+
+// ── ③ 채널 통계 업데이트 ──
+async function loadStats() {
+    const data = await gsGet(GS.stats);
+    if (!data || !data.length) return;
+    data.forEach(row => {
+        const statEl = document.getElementById('stat-'  + row.id);
+        const subsEl = document.getElementById('subs-'  + row.id);
+        if (statEl && row.stat_value) statEl.textContent = row.stat_value;
+        if (subsEl && row.subs_text)  subsEl.textContent = row.subs_text;
+    });
+}
+
+// ── 탭 필터 (인기 콘텐츠) ──
 function filter(ch, btn) {
     document.querySelectorAll('.tab').forEach(b => b.classList.remove('on'));
     btn.classList.add('on');
@@ -874,6 +1001,7 @@ function filter(ch, btn) {
     });
 }
 
+// ── 탭 필터 (협업 레퍼런스) ──
 function filterRef(cat, btn) {
     document.querySelectorAll('.ref-btn').forEach(b => b.classList.remove('on'));
     btn.classList.add('on');
@@ -882,21 +1010,25 @@ function filterRef(cat, btn) {
     });
 }
 
+// ── 햄버거 메뉴 ──
 function toggleMenu() {
     const menu = document.getElementById('mobileMenu');
     const btn  = document.getElementById('hamburger');
     const isOpen = menu.classList.contains('open');
     menu.classList.toggle('open');
     btn.classList.toggle('open');
-    // 열릴 때 스크롤 막기
     document.body.style.overflow = isOpen ? '' : 'hidden';
 }
-
 function closeMenu() {
     document.getElementById('mobileMenu').classList.remove('open');
     document.getElementById('hamburger').classList.remove('open');
     document.body.style.overflow = '';
 }
+
+// ── 초기화: 구글 시트 데이터 로드 ──
+document.addEventListener('DOMContentLoaded', () => {
+    Promise.allSettled([loadVideos(), loadRefs(), loadStats()]);
+});
 </script>
 
 <script>
@@ -957,102 +1089,5 @@ function closeMenu() {
     resize(); spawn(); tick();
 })();
 </script>
-<script>
-<script>
-// 1. 쉼표와 따옴표를 완벽하게 처리하는 개선된 CSV 파싱 함수
-function parseCSV(text) {
-    const result = [];
-    let row = [];
-    let inQuotes = false;
-    let val = '';
-    
-    for (let i = 0; i < text.length; i++) {
-        let char = text[i];
-        let nextChar = text[i + 1];
-
-        // 따옴표 안의 따옴표("") 처리
-        if (char === '"' && inQuotes && nextChar === '"') {
-            val += '"'; 
-            i++;
-        } 
-        // 따옴표 시작/종료
-        else if (char === '"') {
-            inQuotes = !inQuotes; 
-        } 
-        // 쉼표 (따옴표 밖에 있을 때만 다음 칸으로 이동)
-        else if (char === ',' && !inQuotes) {
-            row.push(val.trim());
-            val = '';
-        } 
-        // 줄바꿈 처리
-        else if ((char === '\n' || char === '\r') && !inQuotes) {
-            if (char === '\r' && nextChar === '\n') i++; 
-            row.push(val.trim());
-            if (row.join('').trim() !== '') result.push(row);
-            row = [];
-            val = '';
-        } 
-        // 일반 글자
-        else {
-            val += char;
-        }
-    }
-    // 마지막 남은 데이터 밀어넣기
-    if (val || row.length > 0) {
-        row.push(val.trim());
-        if (row.join('').trim() !== '') result.push(row);
-    }
-
-    const headers = result[0];
-    return result.slice(1).map(row => {
-        let obj = {};
-        headers.forEach((h, i) => obj[h] = row[i] || '');
-        return obj;
-    });
-}
-
-// 2. 구글 시트에서 데이터를 불러와서 화면에 그리는 함수
-async function fetchAndRenderData() {
-    // [중요] 구글 시트 CSV 링크를 아래 따옴표 안에 꼭 다시 넣어주세요!
-    const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTgK4Yf7lqIsMNakLux2KAMmMMVcRqcoe6pcPtOHTivXbkzuHuCJfy8Pj-ZXkezXIjusoW5_3CT_myV/pub?output=csv'; 
-
-    try {
-        const response = await fetch(csvUrl);
-        const dataText = await response.text();
-        const items = parseCSV(dataText);
-
-        const vgrid = document.querySelector('.vgrid');
-        if (!vgrid) return;
-        
-        vgrid.innerHTML = ''; 
-
-        items.forEach(item => {
-            // 썸네일 이미지가 찌그러지지 않고 꽉 차도록 style 추가
-            const card = `
-                <a href="${item.link}" class="vcard" target="_blank" rel="noopener noreferrer">
-                    <div class="thumb">
-                        <img src="${item.thumbnail}" alt="${item.title}" style="width:100%; height:100%; object-fit:cover;">
-                        <div class="thumb-overlay"></div>
-                        <span class="ch-badge badge-vmug">${item.badge}</span>
-                        <span class="view-count">${item.views}</span>
-                        <div class="play-icon"></div>
-                    </div>
-                    <div class="vcard-body">
-                        <div class="vcard-ch c-vmug">${item.channel}</div>
-                        <div class="vcard-title">${item.title}</div>
-                    </div>
-                </a>
-            `;
-            vgrid.insertAdjacentHTML('beforeend', card);
-        });
-
-    } catch (error) {
-        console.error('스프레드시트 데이터 연동 중 오류 발생:', error);
-    }
-}
-
-window.addEventListener('DOMContentLoaded', fetchAndRenderData);
-</script> 
-</script>    
 </body>
 </html>
