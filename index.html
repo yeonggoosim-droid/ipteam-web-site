@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>지식콘텐츠IP팀 — Dark Editorial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;500&family=DM+Serif+Display:ital@0;1&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0E0D0B;
+      --bg2: #141310;
+      --gold: #C8A97E;
+      --gold2: #EEE7D5;
+      --text: #D4CFC8;
+      --muted: #6B6560;
+      --border: #2A2825;
+      --accent: #B8860B;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Noto Sans KR', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 40px;
+      background: rgba(14,13,11,0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { font-family: 'Noto Sans KR', sans-serif; font-weight: 500; font-size: 14px; letter-spacing: 0.05em; color: var(--gold2); }
+    .nav-logo span { font-family: 'DM Serif Display', serif; font-style: italic; color: var(--gold); }
+    .nav-sub { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.2em; color: var(--muted); margin-left: 10px; }
+    .nav-links { display: flex; gap: 28px; align-items: center; }
+    .nav-links a { font-size: 12px; font-weight: 400; letter-spacing: 0.08em; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--gold2); }
+    .nav-cta { background: var(--gold); color: var(--bg) !important; padding: 7px 16px; font-weight: 500 !important; }
+
+    /* HERO */
+    .hero {
+      padding: 140px 40px 80px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+      align-items: end; border-bottom: 1px solid var(--border);
+    }
+    .hero-meta { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--muted); margin-bottom: 24px; }
+    .hero-title { font-family: 'Noto Serif KR', serif; font-size: clamp(42px, 5.5vw, 72px); font-weight: 700; line-height: 1.15; color: var(--gold2); letter-spacing: -0.02em; }
+    .hero-title em { font-family: 'DM Serif Display', serif; font-style: italic; color: var(--gold); }
+    .hero-desc { margin-top: 24px; font-size: 14px; line-height: 1.8; color: var(--muted); max-width: 440px; }
+    .hero-btns { display: flex; gap: 12px; margin-top: 32px; }
+    .btn-primary { background: var(--gold); color: var(--bg); padding: 12px 24px; font-size: 13px; font-weight: 500; letter-spacing: 0.05em; cursor: pointer; border: none; text-decoration: none; display: inline-block; }
+    .btn-secondary { border: 1px solid var(--muted); color: var(--text); padding: 12px 24px; font-size: 13px; letter-spacing: 0.05em; cursor: pointer; background: none; text-decoration: none; display: inline-block; }
+    .hero-right { border-left: 1px solid var(--border); padding-left: 48px; }
+    .hero-right-label { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.2em; color: var(--muted); margin-bottom: 20px; }
+    .hero-right-text { font-family: 'Noto Serif KR', serif; font-size: 15px; line-height: 1.9; color: var(--text); font-weight: 300; }
+    .hero-stats { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 12px; color: var(--muted); }
+    .hero-stats strong { color: var(--gold); font-size: 14px; }
+
+    /* STATS STRIP */
+    .stats-strip { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--border); }
+    .stat-item { padding: 36px 40px; border-right: 1px solid var(--border); }
+    .stat-item:last-child { border-right: none; }
+    .stat-label { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.2em; color: var(--muted); margin-bottom: 12px; }
+    .stat-number { font-family: 'DM Serif Display', serif; font-size: 52px; line-height: 1; color: var(--gold2); }
+    .stat-number sup { font-family: 'Noto Sans KR', sans-serif; font-size: 18px; font-weight: 300; vertical-align: super; color: var(--gold); }
+    .stat-channel { margin-top: 10px; font-size: 11px; color: var(--muted); letter-spacing: 0.05em; }
+    .stat-loading { color: var(--muted); font-size: 20px; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
+
+    /* SECTION */
+    section { padding: 72px 40px; border-bottom: 1px solid var(--border); }
+    .section-header { display: flex; align-items: baseline; gap: 16px; margin-bottom: 48px; }
+    .section-tag { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.25em; color: var(--gold); text-transform: uppercase; }
+    .section-title { font-family: 'Noto Serif KR', serif; font-size: 28px; font-weight: 600; color: var(--gold2); }
+
+    /* CONTENT GRID */
+    .content-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--border); }
+    .content-card { background: var(--bg2); padding: 28px; transition: background 0.2s; }
+    .content-card:hover { background: #1a1916; }
+    .card-channel { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.2em; color: var(--gold); margin-bottom: 12px; }
+    .card-title { font-family: 'Noto Serif KR', serif; font-size: 14px; line-height: 1.7; color: var(--text); margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .card-views { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); }
+    .card-link { display: inline-block; margin-top: 12px; font-size: 11px; color: var(--gold); text-decoration: none; letter-spacing: 0.08em; }
+    .card-link:hover { color: var(--gold2); }
+
+    /* COLLAB */
+    .collab-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; background: var(--border); }
+    .collab-card { background: var(--bg2); padding: 32px; transition: background 0.2s; }
+    .collab-card:hover { background: #1a1916; }
+    .collab-badge { display: inline-block; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.15em; color: var(--bg); background: var(--gold); padding: 3px 8px; margin-bottom: 16px; }
+    .collab-title { font-family: 'Noto Serif KR', serif; font-size: 16px; font-weight: 600; color: var(--gold2); margin-bottom: 12px; }
+    .collab-desc { font-size: 13px; line-height: 1.8; color: var(--muted); }
+    .collab-views { margin-top: 16px; font-family: 'Space Mono', monospace; font-size: 11px; color: var(--gold); }
+
+    /* WHY */
+    .why-section { text-align: center; padding: 96px 40px; }
+    .why-title { font-family: 'Noto Serif KR', serif; font-size: clamp(32px, 4vw, 52px); font-weight: 700; line-height: 1.3; color: var(--gold2); }
+    .why-title em { font-family: 'DM Serif Display', serif; font-style: italic; color: var(--gold); }
+    .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--border); margin-top: 64px; text-align: left; }
+    .why-item { background: var(--bg2); padding: 36px; }
+    .why-num { font-family: 'DM Serif Display', serif; font-size: 48px; color: var(--border); line-height: 1; margin-bottom: 20px; }
+    .why-item-title { font-family: 'Noto Serif KR', serif; font-size: 16px; font-weight: 600; color: var(--gold2); margin-bottom: 12px; }
+    .why-item-text { font-size: 13px; line-height: 1.8; color: var(--muted); }
+
+    /* FOOTER */
+    footer { padding: 48px 40px; display: flex; justify-content: space-between; align-items: center; }
+    .footer-logo { font-family: 'Noto Sans KR', sans-serif; font-weight: 500; font-size: 13px; color: var(--gold2); }
+    .footer-copy { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: var(--muted); }
+
+    /* SKELETON */
+    .skeleton { background: linear-gradient(90deg, var(--border) 25%, #2f2d2a 50%, var(--border) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 2px; height: 14px; margin: 6px 0; }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+    .error-msg { background: #1a0a0a; border: 1px solid #4a1010; color: #cc6666; padding: 12px 16px; font-size: 12px; margin-bottom: 16px; display: none; }
+
+    @media (max-width: 900px) {
+      nav { padding: 14px 20px; }
+      .nav-links { display: none; }
+      .hero { grid-template-columns: 1fr; padding: 100px 20px 48px; }
+      .hero-right { border-left: none; border-top: 1px solid var(--border); padding: 32px 0 0; }
+      .stats-strip { grid-template-columns: repeat(2, 1fr); }
+      .content-grid { grid-template-columns: 1fr; }
+      .collab-grid { grid-template-columns: 1fr; }
+      .why-grid { grid-template-columns: 1fr; }
+      section { padding: 48px 20px; }
+      footer { flex-direction: column; gap: 16px; padding: 32px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div style="display:flex;align-items:baseline;gap:8px">
+    <span class="nav-logo">지식콘텐츠<span>IP</span>팀</span>
+    <span class="nav-sub">KNOWLEDGE · CONTENT · IP</span>
+  </div>
+  <div class="nav-links">
+    <a href="#channels">채널</a>
+    <a href="#content">콘텐츠IP</a>
+    <a href="#collab">협업 사례</a>
+    <a href="#why">상품</a>
+    <a href="#contact" class="nav-cta">비즈니스 문의</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div>
+    <div class="hero-meta">VOL. 04 · NO. 26 · DARK EDITION &nbsp;&nbsp;&nbsp; <span id="today-date"></span> &nbsp;&nbsp;&nbsp; BUSINESS PARTNERSHIP</div>
+    <h1 class="hero-title">콘텐츠로<br>세상을 이해하는<br><em>법을 만듭니다</em></h1>
+    <p class="hero-desc">비디오머그·교양이를부탁해·경제탈곡기·스브스프리미엄. 기자들이 직접 기획·제작하는 깊이 있는 지식 콘텐츠 브랜드와 함께 새로운 비즈니스 기회를 열어보세요.</p>
+    <div class="hero-btns">
+      <a href="#contact" class="btn-primary">비즈니스 문의하기 →</a>
+      <a href="#channels" class="btn-secondary">채널 살펴보기 ↗</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-right-label">— FROM THE EDITOR</div>
+    <p class="hero-right-text">광고가 아닌 저널리즘. 취재가 만든 신뢰 위에 브랜드의 이야기를 쌓습니다. 기자의 눈으로 기획하고, 현장에서 취재하며, 독자의 언어로 전달합니다.</p>
+    <div class="hero-stats">총 구독자 <strong id="total-subs">—</strong> · 4개 채널</div>
+  </div>
+</div>
+
+<div id="channels" class="stats-strip">
+  <div class="stat-item">
+    <div class="stat-label">YOUTUBE / NO. 01</div>
+    <div class="stat-number" id="stat-vmug"><span class="stat-loading">···</span></div>
+    <div class="stat-channel">비디오머그 구독자</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-label">YOUTUBE / NO. 02</div>
+    <div class="stat-number" id="stat-gyo"><span class="stat-loading">···</span></div>
+    <div class="stat-channel">교양이를부탁해 구독자</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-label">YOUTUBE / NO. 03</div>
+    <div class="stat-number" id="stat-econ"><span class="stat-loading">···</span></div>
+    <div class="stat-channel">경제탈곡기 구독자</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-label">WEB / NO. 04</div>
+    <div class="stat-number">21<sup>만</sup></div>
+    <div class="stat-channel">스브스프리미엄 구독자</div>
+  </div>
+</div>
+
+<section id="content">
+  <div class="section-header">
+    <span class="section-tag">— POPULAR</span>
+    <h2 class="section-title">인기 콘텐츠</h2>
+  </div>
+  <div id="error-content" class="error-msg">콘텐츠 데이터를 불러오지 못했습니다. 잠시 후 새로고침해주세요.</div>
+  <div class="content-grid" id="content-grid">
+    <div class="content-card"><div class="skeleton" style="width:60%;height:10px"></div><div class="skeleton" style="height:14px;margin-top:12px"></div><div class="skeleton" style="height:14px"></div><div class="skeleton" style="width:40%;height:10px;margin-top:12px"></div></div>
+    <div class="content-card"><div class="skeleton" style="width:60%;height:10px"></div><div class="skeleton" style="height:14px;margin-top:12px"></div><div class="skeleton" style="height:14px"></div><div class="skeleton" style="width:40%;height:10px;margin-top:12px"></div></div>
+    <div class="content-card"><div class="skeleton" style="width:60%;height:10px"></div><div class="skeleton" style="height:14px;margin-top:12px"></div><div class="skeleton" style="height:14px"></div><div class="skeleton" style="width:40%;height:10px;margin-top:12px"></div></div>
+  </div>
+</section>
+
+<section id="collab">
+  <div class="section-header">
+    <span class="section-tag">— CASE STUDY</span>
+    <h2 class="section-title">협업 사례</h2>
+  </div>
+  <div id="error-collab" class="error-msg">협업 데이터를 불러오지 못했습니다.</div>
+  <div class="collab-grid" id="collab-grid">
+    <div class="collab-card"><div class="skeleton" style="width:40%;height:10px"></div><div class="skeleton" style="height:16px;margin-top:16px"></div><div class="skeleton" style="height:13px;margin-top:8px"></div><div class="skeleton" style="height:13px"></div></div>
+    <div class="collab-card"><div class="skeleton" style="width:40%;height:10px"></div><div class="skeleton" style="height:16px;margin-top:16px"></div><div class="skeleton" style="height:13px;margin-top:8px"></div><div class="skeleton" style="height:13px"></div></div>
+  </div>
+</section>
+
+<section id="why" class="why-section">
+  <h2 class="why-title">왜 지식콘텐츠<em>IP</em>팀과<br>함께해야 하는가</h2>
+  <div class="why-grid">
+    <div class="why-item">
+      <div class="why-num">01</div>
+      <div class="why-item-title">저널리즘 기반 신뢰</div>
+      <div class="why-item-text">SBS 기자들이 직접 기획·취재·제작합니다. 광고가 아닌 콘텐츠로, 브랜드의 이야기를 독자가 신뢰할 수 있는 방식으로 전달합니다.</div>
+    </div>
+    <div class="why-item">
+      <div class="why-num">02</div>
+      <div class="why-item-title">검증된 콘텐츠 IP</div>
+      <div class="why-item-text">비디오머그·교양이를부탁해·경제탈곡기. 각 채널은 독립적인 브랜드 아이덴티티와 충성 구독자층을 가진 검증된 미디어 자산입니다.</div>
+    </div>
+    <div class="why-item">
+      <div class="why-num">03</div>
+      <div class="why-item-title">300만+ 직접 도달</div>
+      <div class="why-item-text">광고 매체가 아닌 자체 채널로 300만 이상의 구독자에게 직접 도달합니다. 플랫폼 알고리즘이 아닌 콘텐츠 힘으로 만든 관계입니다.</div>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="footer-logo">지식콘텐츠<span style="font-family:'DM Serif Display',serif;font-style:italic;color:var(--gold)">IP</span>팀 — SBS</div>
+  <div class="footer-copy">© 2026 SBS 지식콘텐츠IP팀 · KNOWLEDGE · CONTENT · IP</div>
+</footer>
+
+<script>
+const SHEET_ID = '1hMmQU6g2Zl5AFhScN8CKfVdgcibyuk40OLsNCMgR5Mw';
+
+// 시트 이름을 URL 인코딩해서 직접 호출
+const URLS = {
+  popular: `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=%EC%9D%B8%EA%B8%B0%EC%BD%98%ED%85%90%EC%B8%A0`,
+  collab:  `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=%ED%98%91%EC%97%85%20%EB%A0%88%ED%8D%BC%EB%9F%B0%EC%8A%A4`,
+  stats:   `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=%EC%B1%84%EB%84%90%20%ED%86%B5%EA%B3%84`,
+};
+
+// 오늘 날짜
+const d = new Date();
+document.getElementById('today-date').textContent =
+  d.toLocaleDateString('en-US', {month:'short', day:'2-digit', year:'numeric'}).toUpperCase();
+
+// CSV 파서
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  const headers = parseRow(lines[0]);
+  return lines.slice(1).map(line => {
+    const vals = parseRow(line);
+    const obj = {};
+    headers.forEach((h, i) => obj[h.trim().replace(/^"|"$/g,'')] = (vals[i] || '').trim().replace(/^"|"$/g,''));
+    return obj;
+  }).filter(r => Object.values(r).some(v => v));
+}
+
+function parseRow(line) {
+  const result = []; let cur = ''; let inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (c === '"') { inQ = !inQ; }
+    else if (c === ',' && !inQ) { result.push(cur); cur = ''; }
+    else { cur += c; }
+  }
+  result.push(cur);
+  return result;
+}
+
+async function fetchCSV(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return parseCSV(await res.text());
+}
+
+function parseSubs(str) {
+  const m = (str || '').match(/([\d.]+)(만|천)?/);
+  if (!m) return { num: str, unit: '' };
+  return { num: m[1], unit: m[2] || '' };
+}
+
+// 채널 통계
+async function loadStats() {
+  try {
+    const rows = await fetchCSV(URLS.stats);
+    let totalMan = 0;
+    rows.forEach(r => {
+      const id = r['id'];
+      const val = r['stat_value'] || '';
+      const { num, unit } = parseSubs(val);
+      if (unit === '만') totalMan += parseFloat(num) || 0;
+      const el = document.getElementById('stat-' + id);
+      if (el) el.innerHTML = num + '<sup>' + unit + '</sup>';
+    });
+    const el = document.getElementById('total-subs');
+    if (el && totalMan > 0) el.textContent = Math.round(totalMan) + '만+';
+  } catch(e) { console.warn('stats:', e); }
+}
+
+const CH_COLOR = {
+  '비디오머그': '#C8A97E',
+  '교양이를부탁해': '#8FA88A',
+  '경제탈곡기': '#A89C8F',
+};
+
+// 인기 콘텐츠
+async function loadContent() {
+  try {
+    const rows = await fetchCSV(URLS.popular);
+    const grid = document.getElementById('content-grid');
+    if (!rows.length) throw new Error('empty');
+    grid.innerHTML = rows.map(r => {
+      const vid = (r['video_id'] || '').split('&')[0];
+      const ch = r['channel'] || '';
+      const color = CH_COLOR[ch] || '#C8A97E';
+      const url = vid ? 'https://youtu.be/' + vid : '#';
+      return `<div class="content-card">
+        <div class="card-channel" style="color:${color}">${ch}</div>
+        <div class="card-title">${r['title'] || ''}</div>
+        <div class="card-views">▶ ${r['view_count'] || ''}</div>
+        ${vid ? `<a href="${url}" target="_blank" class="card-link" style="color:${color}">영상 보기 ↗</a>` : ''}
+      </div>`;
+    }).join('');
+  } catch(e) {
+    document.getElementById('error-content').style.display = 'block';
+    document.getElementById('content-grid').innerHTML = '';
+  }
+}
+
+// 협업 레퍼런스
+async function loadCollab() {
+  try {
+    const rows = await fetchCSV(URLS.collab);
+    const grid = document.getElementById('collab-grid');
+    if (!rows.length) throw new Error('empty');
+    const typeMap = { gov:'GOV', corp:'CORP', visit:'VISIT' };
+    grid.innerHTML = rows.map(r => {
+      const vid = (r['video_id'] || '').split('&')[0];
+      const type = typeMap[r['type']] || (r['type']||'').toUpperCase();
+      const url = vid ? 'https://youtu.be/' + vid : '#';
+      return `<div class="collab-card">
+        <span class="collab-badge">${type}</span>
+        <div class="collab-title">${r['partner'] || ''}</div>
+        <div class="collab-desc">${r['description'] || ''}</div>
+        <div class="collab-views">▶ ${r['view_count'] || ''}</div>
+        ${vid ? `<a href="${url}" target="_blank" class="card-link" style="display:inline-block;margin-top:12px">영상 보기 ↗</a>` : ''}
+      </div>`;
+    }).join('');
+  } catch(e) {
+    document.getElementById('error-collab').style.display = 'block';
+    document.getElementById('collab-grid').innerHTML = '';
+  }
+}
+
+loadStats();
+loadContent();
+loadCollab();
+</script>
+</body>
+</html>
