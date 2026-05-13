@@ -323,7 +323,7 @@
 </footer>
 
 <script>
-// 1. 설정 및 주소 (기존 ID 유지)
+// 1. 기본 설정
 const SHEET_ID = '1hMmQU6g2Zl5AFhScN8CKfVdgcibyuk40OLsNCMgR5Mw';
 const URLS = {
   popular: `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=%EC%9D%B8%EA%B8%B0%EC%BD%98%ED%85%90%EC%B8%A0`,
@@ -331,28 +331,22 @@ const URLS = {
   stats:   `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=%EC%B1%84%EB%84%90%20%ED%86%B5%EA%B3%84`,
 };
 
-// 채널별 포인트 컬러 설정
-const CH_COLOR = {
-  '비디오머그': '#C8A97E',
-  '교양이를 부탁해': '#C8A97E',
-  '경제탈곡기': '#C8A97E'
-};
-
-// 2. 유튜브 ID 추출 함수 (핵심 수정 사항)
-// 주소 전체를 넣든 ID만 넣든 11자리 ID만 정확히 뽑아냅니다.
+// 유튜브 ID만 정확히 뽑아내는 강력한 함수
 function extractVideoId(url) {
     if (!url) return '';
+    // 주소 형태든 ID 형태든 11자리 문자열을 찾아냄
     const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
     const match = url.match(regExp);
-    return (match && match[7].length === 11) ? match[7] : url.trim();
+    const id = (match && match[7].length === 11) ? match[7] : url.trim();
+    return id.replace(/['"]/g, ""); // 따옴표 제거
 }
 
-// 오늘 날짜 표시
+// 오늘 날짜
 const d = new Date();
 const dateEl = document.getElementById('today-date');
 if(dateEl) dateEl.textContent = d.toLocaleDateString('en-US', {month:'short', day:'2-digit', year:'numeric'}).toUpperCase();
 
-// CSV 파싱 함수
+// CSV 파싱
 async function fetchCSV(url) {
   const res = await fetch(url);
   const text = await res.text();
@@ -380,7 +374,7 @@ function parseRow(line) {
   result.push(cur); return result;
 }
 
-// 데이터 로드: 채널 통계
+// 1. 통계 로드
 async function loadStats() {
   try {
     const rows = await fetchCSV(URLS.stats);
@@ -394,66 +388,77 @@ async function loadStats() {
     });
     const totalEl = document.getElementById('total-subs');
     if(totalEl) totalEl.textContent = Math.round(totalMan) + '만+';
-  } catch(e) { console.error(e); }
+  } catch(e) { console.error("Stats Load Error:", e); }
 }
 
-// 데이터 로드: 인기 콘텐츠 (수정됨)
+// 2. 인기 콘텐츠 로드 (수정됨)
 async function loadContent() {
   try {
     const rows = await fetchCSV(URLS.popular);
     const grid = document.getElementById('content-grid');
-    grid.innerHTML = rows.map(r => {
-      const vid = extractVideoId(r['video_id']); // 추출 함수 사용
-      const url = vid ? 'https://youtu.be/' + vid : '#';
-      const thumb = vid ? `https://img.youtube.com/vi/${vid}/mqdefault.jpg` : '';
+    grid.innerHTML = rows.map((r, index) => {
+      const vid = extractVideoId(r['video_id']);
+      console.log(`콘텐츠 ${index+1} 추출 ID:`, vid); // 디버깅용 로그
+      
+      const url = vid ? `https://www.youtube.com/watch?v=${vid}` : '#';
+      // 이미지를 i.ytimg.com 서버로 변경 (더 안정적)
+      const thumb = vid ? `https://i.ytimg.com/vi/${vid}/hqdefault.jpg` : '';
+      
       return `
         <a href="${url}" target="_blank" class="content-card">
           <div class="card-thumb">
-            <img src="${thumb}" alt="" onerror="this.src='https://img.youtube.com/vi/${vid}/0.jpg'">
-            <span class="card-views-badge">▶ ${r['view_count']}</span>
+            <img src="${thumb}" alt="" onerror="this.src='https://i.ytimg.com/vi/${vid}/0.jpg'">
+            <span class="card-views-badge">▶ ${r['view_count'] || '0'}</span>
           </div>
           <div class="card-body">
-            <div class="card-channel">${r['channel']}</div>
-            <div class="card-title">${r['title']}</div>
+            <div class="card-channel">${r['channel'] || 'SBS'}</div>
+            <div class="card-title">${r['title'] || '제목 없음'}</div>
             <div class="card-link">VIEW PROJECT ↗</div>
           </div>
         </a>`;
     }).join('');
-  } catch(e) { console.error(e); }
+  } catch(e) { console.error("Content Load Error:", e); }
 }
 
-// 데이터 로드: 협업 레퍼런스 (수정됨)
+// 3. 협업 레퍼런스 로드
 async function loadCollab() {
   try {
     const rows = await fetchCSV(URLS.collab);
     const grid = document.getElementById('collab-grid');
     const typeMap = { gov:'GOV', corp:'CORP', visit:'VISIT' };
-    grid.innerHTML = rows.map(r => {
-      const vid = extractVideoId(r['video_id']); // 추출 함수 사용
+    grid.innerHTML = rows.map((r, index) => {
+      const vid = extractVideoId(r['video_id']);
+      console.log(`협업 ${index+1} 추출 ID:`, vid); // 디버깅용 로그
+      
       const type = typeMap[r['type']] || (r['type']||'').toUpperCase();
-      const url = vid ? 'https://youtu.be/' + vid : '#';
-      const thumb = vid ? `https://img.youtube.com/vi/${vid}/mqdefault.jpg` : '';
+      const url = vid ? `https://www.youtube.com/watch?v=${vid}` : '#';
+      const thumb = vid ? `https://i.ytimg.com/vi/${vid}/hqdefault.jpg` : '';
+      
       return `
         <div class="collab-card">
-          ${thumb ? `
+          ${vid ? `
           <a href="${url}" target="_blank" class="card-thumb">
-            <img src="${thumb}" alt="" onerror="this.src='https://img.youtube.com/vi/${vid}/0.jpg'">
+            <img src="${thumb}" alt="" onerror="this.src='https://i.ytimg.com/vi/${vid}/0.jpg'">
             <div class="card-thumb-overlay"></div>
-            <span class="card-views-badge">▶ ${r['view_count']}</span>
+            <span class="card-views-badge">▶ ${r['view_count'] || '0'}</span>
           </a>` : ''}
           <div class="card-body">
             <span class="collab-badge">${type}</span>
-            <div class="collab-title">${r['partner']}</div>
-            <div class="collab-desc">${r['description']}</div>
-            ${vid ? `<a href="${url}" target="_blank" class="card-link">영상 보기 ↗</a>` : ''}
+            <div class="collab-title">${r['partner'] || ''}</div>
+            <div class="collab-desc">${r['description'] || ''}</div>
+            ${vid ? `<a href="${url}" target="_blank" class="card-link" style="margin-top:12px; display:inline-block;">영상 보기 ↗</a>` : ''}
           </div>
         </div>`;
     }).join('');
-  } catch(e) { console.error(e); }
+  } catch(e) { console.error("Collab Load Error:", e); }
 }
 
-// 실행
-loadStats(); loadContent(); loadCollab();
+// 실행 순서 보장
+window.onload = () => {
+  loadStats();
+  loadContent();
+  loadCollab();
+};
 </script>
 </body>
 </html>
