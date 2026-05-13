@@ -2,7 +2,7 @@
  * sbscontentip.co.kr - Data Rendering Logic
  */
 const CONFIG = {
-    sheetId: 'YOUR_GOOGLE_SHEET_ID_HERE', // 본인의 스프레드시트 ID를 입력하세요.
+    sheetId: '1hMmQU6g2Zl5AFhScN8CKfVdgcibyuk40OLsNCMgR5Mw', // 본인의 스프레드시트 ID를 입력하세요.
     tabName: 'Sheet1'
 };
 
