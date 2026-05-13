@@ -323,7 +323,7 @@
 </footer>
 
 <script>
-// 기존 JS 로직 유지하되 데이터 렌더링 부분만 최적화
+// 1. 설정 및 주소 (기존 ID 유지)
 const SHEET_ID = '1hMmQU6g2Zl5AFhScN8CKfVdgcibyuk40OLsNCMgR5Mw';
 const URLS = {
   popular: `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=%EC%9D%B8%EA%B8%B0%EC%BD%98%ED%85%90%EC%B8%A0`,
@@ -331,16 +331,40 @@ const URLS = {
   stats:   `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=%EC%B1%84%EB%84%90%20%ED%86%B5%EA%B3%84`,
 };
 
-const d = new Date();
-document.getElementById('today-date').textContent = d.toLocaleDateString('en-US', {month:'short', day:'2-digit', year:'numeric'}).toUpperCase();
+// 채널별 포인트 컬러 설정
+const CH_COLOR = {
+  '비디오머그': '#C8A97E',
+  '교양이를 부탁해': '#C8A97E',
+  '경제탈곡기': '#C8A97E'
+};
 
-function parseCSV(text) {
+// 2. 유튜브 ID 추출 함수 (핵심 수정 사항)
+// 주소 전체를 넣든 ID만 넣든 11자리 ID만 정확히 뽑아냅니다.
+function extractVideoId(url) {
+    if (!url) return '';
+    const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[7].length === 11) ? match[7] : url.trim();
+}
+
+// 오늘 날짜 표시
+const d = new Date();
+const dateEl = document.getElementById('today-date');
+if(dateEl) dateEl.textContent = d.toLocaleDateString('en-US', {month:'short', day:'2-digit', year:'numeric'}).toUpperCase();
+
+// CSV 파싱 함수
+async function fetchCSV(url) {
+  const res = await fetch(url);
+  const text = await res.text();
   const lines = text.trim().split('\n');
   const headers = parseRow(lines[0]);
   return lines.slice(1).map(line => {
     const vals = parseRow(line);
     const obj = {};
-    headers.forEach((h, i) => obj[h.trim().replace(/^"|"$/g,'')] = (vals[i] || '').trim().replace(/^"|"$/g,''));
+    headers.forEach((h, i) => {
+      const key = h.trim().replace(/^"|"$/g,'');
+      obj[key] = (vals[i] || '').trim().replace(/^"|"$/g,'');
+    });
     return obj;
   });
 }
@@ -356,10 +380,10 @@ function parseRow(line) {
   result.push(cur); return result;
 }
 
+// 데이터 로드: 채널 통계
 async function loadStats() {
   try {
-    const res = await fetch(URLS.stats);
-    const rows = parseCSV(await res.text());
+    const rows = await fetchCSV(URLS.stats);
     let totalMan = 0;
     rows.forEach(r => {
       const val = r['stat_value'] || '';
@@ -368,20 +392,24 @@ async function loadStats() {
       const el = document.getElementById('stat-' + r['id']);
       if (el) el.innerHTML = (m ? m[1] : val) + `<sup>${m ? m[2] : ''}</sup>`;
     });
-    document.getElementById('total-subs').textContent = Math.round(totalMan) + '만+';
+    const totalEl = document.getElementById('total-subs');
+    if(totalEl) totalEl.textContent = Math.round(totalMan) + '만+';
   } catch(e) { console.error(e); }
 }
 
+// 데이터 로드: 인기 콘텐츠 (수정됨)
 async function loadContent() {
   try {
-    const res = await fetch(URLS.popular);
-    const rows = parseCSV(await res.text());
-    document.getElementById('content-grid').innerHTML = rows.map(r => {
-      const vid = r['video_id'];
+    const rows = await fetchCSV(URLS.popular);
+    const grid = document.getElementById('content-grid');
+    grid.innerHTML = rows.map(r => {
+      const vid = extractVideoId(r['video_id']); // 추출 함수 사용
+      const url = vid ? 'https://youtu.be/' + vid : '#';
+      const thumb = vid ? `https://img.youtube.com/vi/${vid}/mqdefault.jpg` : '';
       return `
-        <a href="https://youtu.be/${vid}" target="_blank" class="content-card">
+        <a href="${url}" target="_blank" class="content-card">
           <div class="card-thumb">
-            <img src="https://img.youtube.com/vi/${vid}/mqdefault.jpg" alt="">
+            <img src="${thumb}" alt="" onerror="this.src='https://img.youtube.com/vi/${vid}/0.jpg'">
             <span class="card-views-badge">▶ ${r['view_count']}</span>
           </div>
           <div class="card-body">
@@ -394,20 +422,37 @@ async function loadContent() {
   } catch(e) { console.error(e); }
 }
 
+// 데이터 로드: 협업 레퍼런스 (수정됨)
 async function loadCollab() {
   try {
-    const res = await fetch(URLS.collab);
-    const rows = parseCSV(await res.text());
-    document.getElementById('collab-grid').innerHTML = rows.map(r => `
-      <div class="collab-card">
-        <span class="collab-badge">${r['type'].toUpperCase()}</span>
-        <div class="collab-title">${r['partner']}</div>
-        <div class="collab-desc">${r['description']}</div>
-        <div style="margin-top:auto; padding-top:20px; color:var(--gold); font-family:'Space Mono'; font-size:11px;">▶ ${r['view_count']} VIEWS</div>
-      </div>`).join('');
+    const rows = await fetchCSV(URLS.collab);
+    const grid = document.getElementById('collab-grid');
+    const typeMap = { gov:'GOV', corp:'CORP', visit:'VISIT' };
+    grid.innerHTML = rows.map(r => {
+      const vid = extractVideoId(r['video_id']); // 추출 함수 사용
+      const type = typeMap[r['type']] || (r['type']||'').toUpperCase();
+      const url = vid ? 'https://youtu.be/' + vid : '#';
+      const thumb = vid ? `https://img.youtube.com/vi/${vid}/mqdefault.jpg` : '';
+      return `
+        <div class="collab-card">
+          ${thumb ? `
+          <a href="${url}" target="_blank" class="card-thumb">
+            <img src="${thumb}" alt="" onerror="this.src='https://img.youtube.com/vi/${vid}/0.jpg'">
+            <div class="card-thumb-overlay"></div>
+            <span class="card-views-badge">▶ ${r['view_count']}</span>
+          </a>` : ''}
+          <div class="card-body">
+            <span class="collab-badge">${type}</span>
+            <div class="collab-title">${r['partner']}</div>
+            <div class="collab-desc">${r['description']}</div>
+            ${vid ? `<a href="${url}" target="_blank" class="card-link">영상 보기 ↗</a>` : ''}
+          </div>
+        </div>`;
+    }).join('');
   } catch(e) { console.error(e); }
 }
 
+// 실행
 loadStats(); loadContent(); loadCollab();
 </script>
 </body>
