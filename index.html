@@ -436,7 +436,7 @@ async function loadStats() {
       if (el) el.innerHTML = num + '<sup>' + unit + '</sup>';
     });
     const el = document.getElementById('total-subs');
-    if (el && totalMan > 0) el.textContent = Math.round(totalMan) + '만+';
+    if (el && totalMan > 0) el.textContent = Math.round(totalMan + 21) + '만+';
   } catch(e) { console.warn('stats:', e); }
 }
 
