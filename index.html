@@ -3,7 +3,20 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>지식콘텐츠IP팀 — Dark Editorial</title>
+  <title>SBS 지식콘텐츠IP팀 — 콘텐츠로 세상을 이해하는 법을 만듭니다</title>
+  <meta name="description" content="SBS 지식콘텐츠IP팀 — 비디오머그·교양이를부탁해·경제탈곡기·오그랲·스브스프리미엄. 기자가 직접 기획·제작하는 지식 콘텐츠와 브랜드 협업 상품을 소개합니다.">
+  <meta name="theme-color" content="#0E0D0B">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="SBS 지식콘텐츠IP팀">
+  <meta property="og:title" content="SBS 지식콘텐츠IP팀 — 콘텐츠로 세상을 이해하는 법을 만듭니다">
+  <meta property="og:description" content="광고가 아닌 저널리즘. 취재가 만든 신뢰 위에 브랜드의 이야기를 쌓습니다. 비디오머그·교양이를부탁해·경제탈곡기·오그랲·스브스프리미엄과 함께하세요.">
+  <meta property="og:url" content="https://sbscontentip.co.kr/">
+  <meta property="og:image" content="https://img.youtube.com/vi/NmxKLbB-YhM/hqdefault.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SBS 지식콘텐츠IP팀 — 콘텐츠로 세상을 이해하는 법을 만듭니다">
+  <meta name="twitter:description" content="광고가 아닌 저널리즘. 취재가 만든 신뢰 위에 브랜드의 이야기를 쌓습니다.">
+  <meta name="twitter:image" content="https://img.youtube.com/vi/NmxKLbB-YhM/hqdefault.jpg">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230E0D0B'/%3E%3Ctext x='32' y='44' font-size='30' text-anchor='middle' fill='%23C8A97E' font-family='Georgia,serif' font-style='italic'%3EIP%3C/text%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;500&family=DM+Serif+Display:ital@0;1&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
@@ -62,17 +75,19 @@
     .hero-stats { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 12px; color: var(--muted); }
     .hero-stats strong { color: var(--gold); font-size: 14px; }
 
-    /* STATS STRIP */
-    .stats-strip { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--border); }
-    .stat-item { padding: 36px 40px; border-right: 1px solid var(--border); }
+    /* STATS STRIP — 5개 채널 */
+    .stats-strip { display: grid; grid-template-columns: repeat(5, 1fr); border-bottom: 1px solid var(--border); }
+    .stat-item { padding: 36px 40px; border-right: 1px solid var(--border); transition: background 0.2s; }
     .stat-item:last-child { border-right: none; }
+    .stat-item:hover { background: #1a1916; }
+    .stat-link { display: block; text-decoration: none; color: inherit; }
     .stat-label { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.2em; color: var(--muted); margin-bottom: 12px; }
     .stat-number { font-family: 'DM Serif Display', serif; font-size: 52px; line-height: 1; color: var(--gold2); }
     .stat-number sup { font-family: 'Noto Sans KR', sans-serif; font-size: 18px; font-weight: 300; vertical-align: super; color: var(--gold); }
     .stat-channel { margin-top: 10px; font-size: 11px; color: var(--muted); letter-spacing: 0.05em; }
-    .stat-loading { color: var(--muted); font-size: 20px; animation: pulse 1.5s infinite; }
+    .stat-channel span { color: var(--gold); }
     .error-msg { display: none; }
-    @keyframes pulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
+    .data-note { display: none; font-size: 11px; color: var(--muted); margin-bottom: 16px; letter-spacing: 0.03em; }
 
     /* SECTION */
     section { padding: 72px 40px; border-bottom: 1px solid var(--border); }
@@ -80,27 +95,37 @@
     .section-tag { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.25em; color: var(--gold); text-transform: uppercase; }
     .section-title { font-family: 'Noto Serif KR', serif; font-size: 28px; font-weight: 600; color: var(--gold2); }
 
+    /* WHAT WE DO — 부서 4대 축 */
+    .pillars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; background: var(--border); }
+    .pillar { background: var(--bg2); padding: 36px 32px; transition: background 0.2s; }
+    .pillar:hover { background: #1a1916; }
+    .pillar-num { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 20px; color: var(--gold); margin-bottom: 16px; }
+    .pillar-title { font-family: 'Noto Serif KR', serif; font-size: 16px; font-weight: 600; color: var(--gold2); margin-bottom: 12px; line-height: 1.6; }
+    .pillar-text { font-size: 13px; line-height: 1.8; color: var(--muted); }
+
     /* CONTENT GRID */
     .content-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--border); }
     .content-card { background: var(--bg2); transition: background 0.2s; overflow: hidden; display: flex; flex-direction: column; }
     .content-card:hover { background: #1a1916; }
 
-    /* 썸네일: 정사각형 박스 안에 전체 이미지 contain */
+    /* 썸네일 수정: 16:9 틀 + cover — 레터박스 제거, 검은 빈 공간 방지 */
     .card-thumb {
       position: relative; width: 100%;
-      aspect-ratio: 1 / 1;
-      background: #0a0a0a;
+      aspect-ratio: 16 / 9;
+      background: linear-gradient(135deg, #1d1a15 0%, #0a0a0a 100%);
       overflow: hidden;
       flex-shrink: 0;
+      display: block;
     }
     .card-thumb img {
       width: 100%; height: 100%;
-      object-fit: contain;        /* 잘리지 않고 전체 표시 */
+      object-fit: cover;          /* 틀을 가득 채움 */
       display: block;
       transition: transform 0.4s ease;
       filter: brightness(0.9);
     }
     .content-card:hover .card-thumb img { transform: scale(1.03); filter: brightness(1); }
+    .collab-card:hover .card-thumb img { transform: scale(1.03); filter: brightness(1); }
     .card-thumb-overlay {
       position: absolute; inset: 0;
       background: linear-gradient(to bottom, transparent 60%, rgba(14,13,11,0.6) 100%);
@@ -165,6 +190,19 @@
     .product-row-name { display: flex; align-items: baseline; gap: 14px; }
     .product-row-desc { padding-right: 40px; }
 
+    /* 문의 폼 */
+    .inquiry-form { max-width: 680px; margin-top: 48px; }
+    .form-row { margin-bottom: 20px; }
+    .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .inquiry-form label { display: block; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.2em; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; }
+    .inquiry-form input, .inquiry-form select, .inquiry-form textarea {
+      width: 100%; background: var(--bg2); border: 1px solid var(--border); color: var(--text);
+      font-family: 'Noto Sans KR', sans-serif; font-size: 13px; padding: 12px 14px; outline: none;
+    }
+    .inquiry-form input:focus, .inquiry-form select:focus, .inquiry-form textarea:focus { border-color: var(--gold); }
+    .inquiry-form textarea { min-height: 120px; resize: vertical; line-height: 1.7; }
+    .form-note { font-size: 11px; color: var(--muted); margin-top: 16px; line-height: 1.7; }
+
     @media (max-width: 900px) {
       nav { padding: 14px 20px; }
       .nav-links { display: none; }
@@ -175,6 +213,7 @@
       .stat-number { font-size: 36px; }
       .content-grid { grid-template-columns: 1fr; }
       .collab-grid { grid-template-columns: 1fr; }
+      .pillars { grid-template-columns: 1fr; }
       section { padding: 40px 20px; }
       footer { flex-direction: column; gap: 16px; padding: 32px 20px; }
 
@@ -191,6 +230,7 @@
 
       /* 비즈니스 문의 채널 그리드 */
       .contact-channels { grid-template-columns: 1fr !important; }
+      .form-row-2 { grid-template-columns: 1fr; }
 
       /* 상품 섹션 헤더 */
       .products-header { flex-direction: column !important; gap: 20px !important; }
@@ -208,18 +248,19 @@
   </div>
   <div class="nav-links">
     <a href="#channels">채널</a>
+    <a href="#what">우리가 하는 일</a>
     <a href="#content">콘텐츠IP</a>
     <a href="#collab">협업 사례</a>
-    <a href="#why">상품</a>
+    <a href="#products">상품</a>
     <a href="#contact" class="nav-cta">비즈니스 문의</a>
   </div>
 </nav>
 
 <div class="hero">
   <div>
-    <div class="hero-meta">VOL. 04 · NO. 26 · DARK EDITION &nbsp;&nbsp;&nbsp; <span id="today-date"></span> &nbsp;&nbsp;&nbsp; BUSINESS PARTNERSHIP</div>
+    <div class="hero-meta">SBS NEWS · KNOWLEDGE CONTENT IP &nbsp;&nbsp;&nbsp; <span id="today-date"></span> &nbsp;&nbsp;&nbsp; BUSINESS PARTNERSHIP</div>
     <h1 class="hero-title">콘텐츠로<br>세상을 이해하는<br><em>법을 만듭니다</em></h1>
-    <p class="hero-desc">비디오머그·교양이를부탁해·경제탈곡기·스브스프리미엄. 기자들이 직접 기획·제작하는 깊이 있는 지식 콘텐츠 브랜드와 함께 새로운 비즈니스 기회를 열어보세요.</p>
+    <p class="hero-desc">비디오머그·교양이를부탁해·경제탈곡기·오그랲·스브스프리미엄. 기자들이 직접 기획·제작하는 깊이 있는 지식 콘텐츠 브랜드와 함께 새로운 비즈니스 기회를 열어보세요.</p>
     <div class="hero-btns">
       <a href="#contact" class="btn-primary">비즈니스 문의하기 →</a>
       <a href="#channels" class="btn-secondary">채널 살펴보기 ↗</a>
@@ -228,43 +269,157 @@
   <div class="hero-right">
     <div class="hero-right-label">— FROM THE EDITOR</div>
     <p class="hero-right-text">광고가 아닌 저널리즘. 취재가 만든 신뢰 위에 브랜드의 이야기를 쌓습니다. 기자의 눈으로 기획하고, 현장에서 취재하며, 독자의 언어로 전달합니다.</p>
-    <div class="hero-stats">총 구독자 <strong id="total-subs">—</strong> · 4개 채널</div>
+    <div class="hero-stats">총 구독자 <strong id="total-subs">268만+</strong> · 5개 채널</div>
   </div>
 </div>
 
 <div id="channels" class="stats-strip">
   <div class="stat-item">
-    <div class="stat-label">YOUTUBE / NO. 01</div>
-    <div class="stat-number" id="stat-vmug"><span class="stat-loading">···</span></div>
-    <div class="stat-channel">비디오머그 구독자</div>
+    <a class="stat-link" href="https://www.youtube.com/@videomug0" target="_blank" rel="noopener">
+      <div class="stat-label">YOUTUBE / NO. 01</div>
+      <div class="stat-number" id="stat-vmug">187.8<sup>만</sup></div>
+      <div class="stat-channel">비디오머그 구독자 <span>↗</span></div>
+    </a>
   </div>
   <div class="stat-item">
-    <div class="stat-label">YOUTUBE / NO. 02</div>
-    <div class="stat-number" id="stat-gyo"><span class="stat-loading">···</span></div>
-    <div class="stat-channel">교양이를부탁해 구독자</div>
+    <a class="stat-link" href="https://www.youtube.com/@sbs_explained" target="_blank" rel="noopener">
+      <div class="stat-label">YOUTUBE / NO. 02</div>
+      <div class="stat-number" id="stat-gyo">50.5<sup>만</sup></div>
+      <div class="stat-channel">교양이를부탁해 구독자 <span>↗</span></div>
+    </a>
   </div>
   <div class="stat-item">
-    <div class="stat-label">YOUTUBE / NO. 03</div>
-    <div class="stat-number" id="stat-econ"><span class="stat-loading">···</span></div>
-    <div class="stat-channel">경제탈곡기 구독자</div>
+    <a class="stat-link" href="https://www.youtube.com/@sbs_economy" target="_blank" rel="noopener">
+      <div class="stat-label">YOUTUBE / NO. 03</div>
+      <div class="stat-number" id="stat-econ">9<sup>만</sup></div>
+      <div class="stat-channel">경제탈곡기 구독자 <span>↗</span></div>
+    </a>
   </div>
   <div class="stat-item">
-    <div class="stat-label">WEB / NO. 04</div>
-    <div class="stat-number">21<sup>만</sup></div>
-    <div class="stat-channel">스브스프리미엄 구독자</div>
+    <a class="stat-link" href="https://www.youtube.com/@5graph" target="_blank" rel="noopener">
+      <div class="stat-label">YOUTUBE / NO. 04</div>
+      <div class="stat-number" id="stat-ograph">4,409<sup>명</sup></div>
+      <div class="stat-channel">오그랲 구독자 <span>↗</span></div>
+    </a>
+  </div>
+  <div class="stat-item">
+    <a class="stat-link" href="https://premium.sbs.co.kr" target="_blank" rel="noopener">
+      <div class="stat-label">WEB / NO. 05</div>
+      <div class="stat-number">21<sup>만</sup></div>
+      <div class="stat-channel">스브스프리미엄 구독자 <span>↗</span></div>
+    </a>
   </div>
 </div>
+
+<!-- 부서가 하는 일 — 업무분장 4대 축 -->
+<section id="what">
+  <div class="section-header">
+    <span class="section-tag">— WHAT WE DO</span>
+    <h2 class="section-title">지식콘텐츠IP부가 만드는 것</h2>
+  </div>
+  <div class="pillars">
+    <div class="pillar">
+      <div class="pillar-num">01</div>
+      <div class="pillar-title">신규 포맷 · 오리지널 IP</div>
+      <div class="pillar-text">새로운 지식 콘텐츠 형식을 발굴하고, 오래가는 오리지널 IP로 키웁니다.</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-num">02</div>
+      <div class="pillar-title">뉴스 × 지식 융합</div>
+      <div class="pillar-text">보도의 취재력과 지식 콘텐츠의 설명력을 결합해 브랜드 경쟁력을 높입니다.</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-num">03</div>
+      <div class="pillar-title">기관 · 지자체 협업</div>
+      <div class="pillar-text">정부·공공기관·지자체와 함께 만드는 협업 콘텐츠와 프로젝트를 기획·제작·운영합니다.</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-num">04</div>
+      <div class="pillar-title">디지털 수익모델 · IP 확장</div>
+      <div class="pillar-text">IP 확장, 협찬형 콘텐츠, 라이선스까지 — 지속 가능한 디지털 수익모델을 설계합니다.</div>
+    </div>
+  </div>
+</section>
 
 <section id="content">
   <div class="section-header">
     <span class="section-tag">— POPULAR</span>
     <h2 class="section-title">인기 콘텐츠</h2>
   </div>
-  <div id="error-content" class="error-msg">콘텐츠 데이터를 불러오지 못했습니다. 잠시 후 새로고침해주세요.</div>
+  <div id="note-content" class="data-note">※ 실시간 연결이 원활하지 않아 최근 저장된 목록을 표시합니다.</div>
   <div class="content-grid" id="content-grid">
-    <div class="content-card"><div class="skeleton" style="width:60%;height:10px"></div><div class="skeleton" style="height:14px;margin-top:12px"></div><div class="skeleton" style="height:14px"></div><div class="skeleton" style="width:40%;height:10px;margin-top:12px"></div></div>
-    <div class="content-card"><div class="skeleton" style="width:60%;height:10px"></div><div class="skeleton" style="height:14px;margin-top:12px"></div><div class="skeleton" style="height:14px"></div><div class="skeleton" style="width:40%;height:10px;margin-top:12px"></div></div>
-    <div class="content-card"><div class="skeleton" style="width:60%;height:10px"></div><div class="skeleton" style="height:14px;margin-top:12px"></div><div class="skeleton" style="height:14px"></div><div class="skeleton" style="width:40%;height:10px;margin-top:12px"></div></div>
+    <div class="content-card">
+      <a href="https://youtu.be/0D7H-fLMss8" target="_blank" rel="noopener" class="card-thumb">
+        <img src="https://img.youtube.com/vi/0D7H-fLMss8/mqdefault.jpg" alt="엔화는 추락하는데 원화만 솟구친다? 원·엔 디커플링 터진 진짜 이유" width="320" height="180" loading="eager" decoding="async" onerror="this.onerror=null;this.src='https://img.youtube.com/vi/0D7H-fLMss8/hqdefault.jpg'">
+        <div class="card-thumb-overlay"></div>
+        <span class="card-views-badge">▶ 261만회</span>
+      </a>
+      <div class="card-body">
+        <div class="card-channel" style="color:#C8A97E">비디오머그</div>
+        <div class="card-title">엔화는 추락하는데 원화만 솟구친다? '원·엔 디커플링' 터진 진짜 이유</div>
+        <a href="https://youtu.be/0D7H-fLMss8" target="_blank" rel="noopener" class="card-link" style="color:#C8A97E">영상 보기 ↗</a>
+      </div>
+    </div>
+    <div class="content-card">
+      <a href="https://youtu.be/pDLgPaoawEs" target="_blank" rel="noopener" class="card-thumb">
+        <img src="https://img.youtube.com/vi/pDLgPaoawEs/mqdefault.jpg" alt="사람을 없앴는데 일은 더 늘었다? 셀프계산대의 반전" width="320" height="180" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='https://img.youtube.com/vi/pDLgPaoawEs/hqdefault.jpg'">
+        <div class="card-thumb-overlay"></div>
+        <span class="card-views-badge">▶ 158만회</span>
+      </a>
+      <div class="card-body">
+        <div class="card-channel" style="color:#C8A97E">비디오머그</div>
+        <div class="card-title">사람을 없앴는데 일은 더 늘었다? 셀프계산대의 반전</div>
+        <a href="https://youtu.be/pDLgPaoawEs" target="_blank" rel="noopener" class="card-link" style="color:#C8A97E">영상 보기 ↗</a>
+      </div>
+    </div>
+    <div class="content-card">
+      <a href="https://youtu.be/NmxKLbB-YhM" target="_blank" rel="noopener" class="card-thumb">
+        <img src="https://img.youtube.com/vi/NmxKLbB-YhM/mqdefault.jpg" alt="[지식뉴스] 이걸 어떻게 버텨요… 프랑스 국가부도 현실화되나" width="320" height="180" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='https://img.youtube.com/vi/NmxKLbB-YhM/hqdefault.jpg'">
+        <div class="card-thumb-overlay"></div>
+        <span class="card-views-badge">▶ 262만회</span>
+      </a>
+      <div class="card-body">
+        <div class="card-channel" style="color:#8FA88A">교양이를부탁해</div>
+        <div class="card-title">[지식뉴스] "이걸 어떻게 버텨요"…'프랑스 국가부도' 현실화되나, 지금 상황이 진짜 심상찮은 이유</div>
+        <a href="https://youtu.be/NmxKLbB-YhM" target="_blank" rel="noopener" class="card-link" style="color:#8FA88A">영상 보기 ↗</a>
+      </div>
+    </div>
+    <div class="content-card">
+      <a href="https://youtu.be/mHwQjUxxel4" target="_blank" rel="noopener" class="card-thumb">
+        <img src="https://img.youtube.com/vi/mHwQjUxxel4/mqdefault.jpg" alt="[지식뉴스] 일본, 경제대국서 탈락 위기… 역대급 엔저가 부른 국가의 쇠퇴" width="320" height="180" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='https://img.youtube.com/vi/mHwQjUxxel4/hqdefault.jpg'">
+        <div class="card-thumb-overlay"></div>
+        <span class="card-views-badge">▶ 136만회</span>
+      </a>
+      <div class="card-body">
+        <div class="card-channel" style="color:#8FA88A">교양이를부탁해</div>
+        <div class="card-title">[지식뉴스] "일본, 경제대국서 탈락 위기"…역대급 엔저가 부른 '국가의 쇠퇴', 지금 일본에서 일어나는 일</div>
+        <a href="https://youtu.be/mHwQjUxxel4" target="_blank" rel="noopener" class="card-link" style="color:#8FA88A">영상 보기 ↗</a>
+      </div>
+    </div>
+    <div class="content-card">
+      <a href="https://youtu.be/y31igxRyrMU" target="_blank" rel="noopener" class="card-thumb">
+        <img src="https://img.youtube.com/vi/y31igxRyrMU/mqdefault.jpg" alt="트럼프 방중, 이란전 판도 흔드나… 600조 물린 중국의 계산" width="320" height="180" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='https://img.youtube.com/vi/y31igxRyrMU/hqdefault.jpg'">
+        <div class="card-thumb-overlay"></div>
+        <span class="card-views-badge">▶ 11만회</span>
+      </a>
+      <div class="card-body">
+        <div class="card-channel" style="color:#A89C8F">경제탈곡기</div>
+        <div class="card-title">트럼프 방중, 이란전 판도 흔드나... '600조' 물린 중국의 계산 | 똑소리E</div>
+        <a href="https://youtu.be/y31igxRyrMU" target="_blank" rel="noopener" class="card-link" style="color:#A89C8F">영상 보기 ↗</a>
+      </div>
+    </div>
+    <div class="content-card">
+      <a href="https://youtu.be/P0WyKQjHkPM" target="_blank" rel="noopener" class="card-thumb">
+        <img src="https://img.youtube.com/vi/P0WyKQjHkPM/mqdefault.jpg" alt="대통령실 핵잠수함 한국 건조 확인… 전문가 미국 고집 땐 끝난다" width="320" height="180" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='https://img.youtube.com/vi/P0WyKQjHkPM/hqdefault.jpg'">
+        <div class="card-thumb-overlay"></div>
+        <span class="card-views-badge">▶ 17만회</span>
+      </a>
+      <div class="card-body">
+        <div class="card-channel" style="color:#A89C8F">경제탈곡기</div>
+        <div class="card-title">대통령실 ‘핵잠수함 한국 건조’ 확인…전문가 "미국 고집 땐 끝난다"</div>
+        <a href="https://youtu.be/P0WyKQjHkPM" target="_blank" rel="noopener" class="card-link" style="color:#A89C8F">영상 보기 ↗</a>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -273,15 +428,65 @@
     <span class="section-tag">— CASE STUDY</span>
     <h2 class="section-title">협업 사례</h2>
   </div>
-  <div id="error-collab" class="error-msg">협업 데이터를 불러오지 못했습니다.</div>
+  <div id="note-collab" class="data-note">※ 실시간 연결이 원활하지 않아 최근 저장된 목록을 표시합니다.</div>
   <div class="collab-grid" id="collab-grid">
-    <div class="collab-card"><div class="skeleton" style="width:40%;height:10px"></div><div class="skeleton" style="height:16px;margin-top:16px"></div><div class="skeleton" style="height:13px;margin-top:8px"></div><div class="skeleton" style="height:13px"></div></div>
-    <div class="collab-card"><div class="skeleton" style="width:40%;height:10px"></div><div class="skeleton" style="height:16px;margin-top:16px"></div><div class="skeleton" style="height:13px;margin-top:8px"></div><div class="skeleton" style="height:13px"></div></div>
+    <div class="collab-card">
+      <a href="https://youtu.be/--yAj5ZJQV8" target="_blank" rel="noopener" class="card-thumb">
+        <img src="https://img.youtube.com/vi/--yAj5ZJQV8/mqdefault.jpg" alt="비디오머그 × 한국벤처투자" width="320" height="180" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='https://img.youtube.com/vi/--yAj5ZJQV8/hqdefault.jpg'">
+        <div class="card-thumb-overlay"></div>
+        <span class="card-views-badge">▶ 232만회</span>
+      </a>
+      <div class="card-body">
+        <span class="collab-badge">CORP</span>
+        <div class="collab-title">비디오머그 × 한국벤처투자</div>
+        <div class="collab-desc">K팝과 영화 흥행 사례를 통해 유망 콘텐츠를 발굴하고 성공을 뒷받침하는 벤처투자의 역할과 가치를 조명한 콘텐츠.</div>
+        <a href="https://youtu.be/--yAj5ZJQV8" target="_blank" rel="noopener" class="card-link">영상 보기 ↗</a>
+      </div>
+    </div>
+    <div class="collab-card">
+      <a href="https://youtu.be/_es2GIlzVmc" target="_blank" rel="noopener" class="card-thumb">
+        <img src="https://img.youtube.com/vi/_es2GIlzVmc/mqdefault.jpg" alt="교양이를부탁해 × 한국에너지정보문화재단" width="320" height="180" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='https://img.youtube.com/vi/_es2GIlzVmc/hqdefault.jpg'">
+        <div class="card-thumb-overlay"></div>
+        <span class="card-views-badge">▶ 53만회</span>
+      </a>
+      <div class="card-body">
+        <span class="collab-badge">CORP</span>
+        <div class="collab-title">교양이를부탁해 × 한국에너지정보문화재단</div>
+        <div class="collab-desc">석유에서 전기로 이동하는 글로벌 에너지 패권의 변화와 AI 시대 전력 확보 경쟁, 한국의 에너지 대응 과제를 짚어보는 전문가 심층 분석 콘텐츠.</div>
+        <a href="https://youtu.be/_es2GIlzVmc" target="_blank" rel="noopener" class="card-link">영상 보기 ↗</a>
+      </div>
+    </div>
+    <div class="collab-card">
+      <a href="https://youtu.be/kJpsfFD3WZc" target="_blank" rel="noopener" class="card-thumb">
+        <img src="https://img.youtube.com/vi/kJpsfFD3WZc/mqdefault.jpg" alt="비디오머그 × HD현대" width="320" height="180" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='https://img.youtube.com/vi/kJpsfFD3WZc/hqdefault.jpg'">
+        <div class="card-thumb-overlay"></div>
+        <span class="card-views-badge">▶ 36만회</span>
+      </a>
+      <div class="card-body">
+        <span class="collab-badge">VISIT</span>
+        <div class="collab-title">비디오머그 × HD현대</div>
+        <div class="collab-desc">국내 기술로 구축한 발사대의 개발 과정과 기술력, 우주산업 발전에 기여한 역할을 조명하는 현장 중심의 기업 협업 콘텐츠.</div>
+        <a href="https://youtu.be/kJpsfFD3WZc" target="_blank" rel="noopener" class="card-link">영상 보기 ↗</a>
+      </div>
+    </div>
+    <div class="collab-card">
+      <a href="https://youtu.be/-RYcj1oYCRc" target="_blank" rel="noopener" class="card-thumb">
+        <img src="https://img.youtube.com/vi/-RYcj1oYCRc/mqdefault.jpg" alt="비디오머그 × 서경배과학재단" width="320" height="180" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='https://img.youtube.com/vi/-RYcj1oYCRc/hqdefault.jpg'">
+        <div class="card-thumb-overlay"></div>
+        <span class="card-views-badge">▶ 28만회</span>
+      </a>
+      <div class="card-body">
+        <span class="collab-badge">VISIT</span>
+        <div class="collab-title">비디오머그 × 서경배과학재단</div>
+        <div class="collab-desc">10여 년의 연구 끝에 뇌전증의 원인을 세계 최초로 규명한 국내 과학자의 연구 성과와 도전 과정을 조명한 과학 인물 탐구 콘텐츠.</div>
+        <a href="https://youtu.be/-RYcj1oYCRc" target="_blank" rel="noopener" class="card-link">영상 보기 ↗</a>
+      </div>
+    </div>
   </div>
 </section>
 
 <!-- 상품 소개 -->
-<section id="why">
+<section id="products">
   <div class="products-header" style="display:flex;align-items:flex-start;gap:60px;margin-bottom:48px">
     <div style="min-width:180px;flex-shrink:0">
       <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.2em;color:var(--gold);margin-bottom:6px">§ PARTNERSHIP PRODUCTS</div>
@@ -296,7 +501,7 @@
     <div style="font-size:11px;color:var(--muted);letter-spacing:0.1em">상품명</div>
     <div style="font-size:11px;color:var(--muted);letter-spacing:0.1em">설명</div>
     <div style="font-size:11px;color:var(--muted);letter-spacing:0.1em">분류</div>
-    <div style="font-size:11px;color:var(--muted);letter-spacing:0.1em">가격 (VAT 별도)</div>
+    <div style="font-size:11px;color:var(--muted);letter-spacing:0.1em">제안 방식</div>
   </div>
 
   <!-- i -->
@@ -304,7 +509,7 @@
     <div class="product-row-name"><span class="product-num">i.</span><span class="product-name">기획형 브랜디드 콘텐츠</span></div>
     <div class="product-row-desc product-desc">브랜드 스토리를 기자가 직접 기획·취재·제작하는 풀 프로덕션 콘텐츠. 광고가 아닌 저널리즘 형식으로 제작되어 시청자의 거부감을 낮추고 브랜드를 입체적으로 노출합니다.</div>
     <div class="product-type">FULL PRODUCTION</div>
-    <div class="product-row-price"><div><div class="product-price">₩3,500 – 5,000만</div><div class="product-price-sub">1편</div></div></div>
+    <div class="product-row-price"><div><div class="product-price">맞춤 제안</div><div class="product-price-sub">1편 · 제작 범위별 협의</div></div></div>
   </div>
 
   <!-- ii -->
@@ -312,7 +517,7 @@
     <div class="product-row-name"><span class="product-num">ii.</span><span class="product-name">콘텐츠 중간광고</span></div>
     <div class="product-row-desc product-desc">5–10초의 짧은 브랜드 소재를 인기 콘텐츠 중간 구간에 삽입. 자연스러운 노출과 높은 주목도 확보.</div>
     <div class="product-type">MID-ROLL</div>
-    <div class="product-row-price"><div><div class="product-price">₩2,000만</div><div class="product-price-sub">10편 패키지</div></div></div>
+    <div class="product-row-price"><div><div class="product-price">패키지 협의</div><div class="product-price-sub">10편 패키지</div></div></div>
   </div>
 
   <!-- iii -->
@@ -320,7 +525,7 @@
     <div class="product-row-name"><span class="product-num">iii.</span><span class="product-name">숏츠 브랜딩</span></div>
     <div class="product-row-desc product-desc">비디오머그·교양이를부탁해 숏츠 콘텐츠 하단 또는 상단에 브랜드를 노출. 숏폼 소비 트렌드에 맞춘 짧고 강렬한 전달.</div>
     <div class="product-type">SHORTS</div>
-    <div class="product-row-price"><div><div class="product-price">₩500만</div><div class="product-price-sub">10편 패키지</div></div></div>
+    <div class="product-row-price"><div><div class="product-price">패키지 협의</div><div class="product-price-sub">10편 패키지</div></div></div>
   </div>
 
   <!-- iv -->
@@ -328,7 +533,7 @@
     <div class="product-row-name"><span class="product-num">iv.</span><span class="product-name">콘텐츠 가상광고</span></div>
     <div class="product-row-desc product-desc">콘텐츠 내에 이미지 형태의 광고 소재를 삽입하는 상품. 로고·이미지 노출을 원하는 협찬주에게 적합.</div>
     <div class="product-type">VIRTUAL AD</div>
-    <div class="product-row-price"><div><div class="product-price">₩1,000만</div><div class="product-price-sub">10편 패키지</div></div></div>
+    <div class="product-row-price"><div><div class="product-price">패키지 협의</div><div class="product-price-sub">10편 패키지</div></div></div>
   </div>
 
   <!-- v -->
@@ -336,12 +541,15 @@
     <div class="product-row-name"><span class="product-num">v.</span><span class="product-name">인트로 스폰서십 배너</span></div>
     <div class="product-row-desc product-desc">콘텐츠 인트로 구간에 브랜드 스폰서십을 노출. 콘텐츠 시작과 함께 각인되는 포지셔닝.</div>
     <div class="product-type">INTRO</div>
-    <div class="product-row-price"><div><div class="product-price">₩2,000만</div><div class="product-price-sub">10편 패키지</div></div></div>
+    <div class="product-row-price"><div><div class="product-price">패키지 협의</div><div class="product-price-sub">10편 패키지</div></div></div>
   </div>
 
   <!-- 안내사항 -->
   <div style="margin-top:32px;border:1px solid var(--border);padding:20px 24px">
-    <p class="product-desc"><span style="color:var(--gold);font-weight:500">안내사항</span> — 기획형 브랜디드 외 상품은 광고주 예산에 맞추어 제안이 가능합니다. 브랜디드 콘텐츠 제작 후 2차 활용 시 별도 마케팅 라이선스 구매가 필요합니다 (기본 라이선스 3개월 / 500만원~, VAT 별도).</p>
+    <p class="product-desc"><span style="color:var(--gold);font-weight:500">안내사항</span> — 기획형 브랜디드 외 상품은 광고주 예산에 맞추어 제안이 가능합니다. 브랜디드 콘텐츠 제작 후 2차 활용 시 별도 마케팅 라이선스 협의가 필요합니다 (기본 라이선스 3개월).</p>
+  </div>
+  <div style="margin-top:32px">
+    <a href="#contact" class="btn-primary">맞춤 제안 받기 →</a>
   </div>
 </section>
 
@@ -370,6 +578,42 @@
       <a href="mailto:sbs_explained@sbs.co.kr" style="font-family:'Space Mono',monospace;font-size:11px;color:var(--gold);text-decoration:none;border-bottom:1px solid var(--border);padding-bottom:2px">✉ sbs_explained@sbs.co.kr</a>
     </div>
   </div>
+
+  <!-- 문의 폼 — 제출 시 메일 앱으로 연결 -->
+  <form class="inquiry-form" id="inquiry-form">
+    <div class="form-row form-row-2">
+      <div>
+        <label for="f-company">회사 / 기관명 *</label>
+        <input type="text" id="f-company" name="company" required placeholder="예) ○○주식회사">
+      </div>
+      <div>
+        <label for="f-name">담당자 *</label>
+        <input type="text" id="f-name" name="name" required placeholder="성함">
+      </div>
+    </div>
+    <div class="form-row form-row-2">
+      <div>
+        <label for="f-email">이메일 *</label>
+        <input type="email" id="f-email" name="email" required placeholder="name@company.com">
+      </div>
+      <div>
+        <label for="f-type">문의 유형 *</label>
+        <select id="f-type" name="type" required>
+          <option value="브랜디드 콘텐츠">브랜디드 콘텐츠</option>
+          <option value="협업 · 콘텐츠 제작">협업 · 콘텐츠 제작</option>
+          <option value="IP 라이선스">IP 라이선스</option>
+          <option value="협찬 · 광고">협찬 · 광고</option>
+          <option value="기타">기타</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <label for="f-message">문의 내용 *</label>
+      <textarea id="f-message" name="message" required placeholder="협업하고 싶은 브랜드와 콘텐츠 방향, 희망 시기 등을 적어주세요."></textarea>
+    </div>
+    <button type="submit" class="btn-primary">메일로 문의 보내기 →</button>
+    <p class="form-note">제출하면 메일 앱이 열리고 작성하신 내용이 담긴 메일이 만들어집니다. 영업일 기준 2일 이내에 회신드립니다.</p>
+  </form>
 </section>
 <script>
 const SHEET_ID = '1hMmQU6g2Zl5AFhScN8CKfVdgcibyuk40OLsNCMgR5Mw';
@@ -422,7 +666,12 @@ function parseSubs(str) {
   return { num: m[1], unit: m[2] || '' };
 }
 
-// 채널 통계
+// 썸네일: mqdefault 실패 시 hqdefault로 교체 (검은 빈 공간 방지)
+function thumbImg(vid, alt, eager) {
+  return `<img src="https://img.youtube.com/vi/${vid}/mqdefault.jpg" alt="${(alt||'').replace(/"/g,'&quot;')}" width="320" height="180" loading="${eager ? 'eager' : 'lazy'}" decoding="async" onerror="this.onerror=null;this.src='https://img.youtube.com/vi/${vid}/hqdefault.jpg'">`;
+}
+
+// 채널 통계 — 시트 로드 실패 시 HTML에 박힌 기본값을 그대로 둔다
 async function loadStats() {
   try {
     const rows = await fetchCSV(URLS.stats);
@@ -444,15 +693,16 @@ const CH_COLOR = {
   '비디오머그': '#C8A97E',
   '교양이를부탁해': '#8FA88A',
   '경제탈곡기': '#A89C8F',
+  '오그랲': '#9A8FA8',
 };
 
-// 인기 콘텐츠
+// 인기 콘텐츠 — 성공 시에만 교체, 실패 시 박힌 기본 카드 유지 + 안내 문구 표시
 async function loadContent() {
   try {
     const rows = await fetchCSV(URLS.popular);
     const grid = document.getElementById('content-grid');
     if (!rows.length) throw new Error('empty');
-    grid.innerHTML = rows.map(r => {
+    grid.innerHTML = rows.map((r, i) => {
       const vid = (r['video_id'] || '').split('&')[0];
       const ch = r['channel'] || '';
       const color = CH_COLOR[ch] || '#C8A97E';
@@ -460,40 +710,41 @@ async function loadContent() {
       const thumb = vid ? `https://img.youtube.com/vi/${vid}/mqdefault.jpg` : '';
       const views = r['view_count'] || '';
       return `<div class="content-card">
-        ${thumb ? `<a href="${url}" target="_blank" class="card-thumb">
-          <img src="${thumb}" alt="${(r['title']||'').replace(/"/g,'')}" loading="lazy">
+        ${thumb ? `<a href="${url}" target="_blank" rel="noopener" class="card-thumb">
+          ${thumbImg(vid, r['title'] || '', i === 0)}
           <div class="card-thumb-overlay"></div>
           ${views ? `<span class="card-views-badge">▶ ${views}</span>` : ''}
         </a>` : ''}
         <div class="card-body">
           <div class="card-channel" style="color:${color}">${ch}</div>
           <div class="card-title">${r['title'] || ''}</div>
-          <a href="${url}" target="_blank" class="card-link" style="color:${color}">영상 보기 ↗</a>
+          <a href="${url}" target="_blank" rel="noopener" class="card-link" style="color:${color}">영상 보기 ↗</a>
         </div>
       </div>`;
     }).join('');
   } catch(e) {
-    document.getElementById('error-content').style.display = 'block';
-    document.getElementById('content-grid').innerHTML = '';
+    console.warn('content:', e);
+    const note = document.getElementById('note-content');
+    if (note) note.style.display = 'block';
   }
 }
 
-// 협업 레퍼런스
+// 협업 레퍼런스 — 성공 시에만 교체, 실패 시 박힌 기본 카드 유지 + 안내 문구 표시
 async function loadCollab() {
   try {
     const rows = await fetchCSV(URLS.collab);
     const grid = document.getElementById('collab-grid');
     if (!rows.length) throw new Error('empty');
     const typeMap = { gov:'GOV', corp:'CORP', visit:'VISIT' };
-    grid.innerHTML = rows.map(r => {
+    grid.innerHTML = rows.map((r, i) => {
       const vid = (r['video_id'] || '').split('&')[0];
       const type = typeMap[r['type']] || (r['type']||'').toUpperCase();
       const url = vid ? 'https://youtu.be/' + vid : '#';
       const thumb = vid ? `https://img.youtube.com/vi/${vid}/mqdefault.jpg` : '';
       const views = r['view_count'] || '';
       return `<div class="collab-card">
-        ${thumb ? `<a href="${url}" target="_blank" class="card-thumb">
-          <img src="${thumb}" alt="${(r['partner']||'').replace(/"/g,'')}" loading="lazy">
+        ${thumb ? `<a href="${url}" target="_blank" rel="noopener" class="card-thumb">
+          ${thumbImg(vid, r['partner'] || '', i === 0)}
           <div class="card-thumb-overlay"></div>
           ${views ? `<span class="card-views-badge">▶ ${views}</span>` : ''}
         </a>` : ''}
@@ -501,15 +752,29 @@ async function loadCollab() {
           <span class="collab-badge">${type}</span>
           <div class="collab-title">${r['partner'] || ''}</div>
           <div class="collab-desc">${r['description'] || ''}</div>
-          ${vid ? `<a href="${url}" target="_blank" class="card-link">영상 보기 ↗</a>` : ''}
+          ${vid ? `<a href="${url}" target="_blank" rel="noopener" class="card-link">영상 보기 ↗</a>` : ''}
         </div>
       </div>`;
     }).join('');
   } catch(e) {
-    document.getElementById('error-collab').style.display = 'block';
-    document.getElementById('collab-grid').innerHTML = '';
+    console.warn('collab:', e);
+    const note = document.getElementById('note-collab');
+    if (note) note.style.display = 'block';
   }
 }
+
+// 문의 폼 — 메일 앱으로 연결
+document.getElementById('inquiry-form').addEventListener('submit', function(ev) {
+  ev.preventDefault();
+  const company = document.getElementById('f-company').value.trim();
+  const name = document.getElementById('f-name').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  const type = document.getElementById('f-type').value;
+  const message = document.getElementById('f-message').value.trim();
+  const subject = '[비즈니스 문의] ' + type + ' — ' + company;
+  const body = '회사 / 기관명: ' + company + '\n담당자: ' + name + '\n이메일: ' + email + '\n문의 유형: ' + type + '\n\n' + message;
+  window.location.href = 'mailto:videomug_biz@sbs.co.kr?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+});
 
 loadStats();
 loadContent();
